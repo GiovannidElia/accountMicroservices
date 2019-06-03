@@ -1,4 +1,4 @@
-package com.quicktutorial.learnmicroservices.accountMicroservices.entities;
+package com.quicktutorial.learnmicroservices.accountMicroservices.repository.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,7 +31,7 @@ public class Account {
     private String fkUser;
 
     @Column(name="TOTAL")
-    @NotNull @NotBlank @NotEmpty
+    @NotNull
     @Getter @Setter
     private Double total;
 }

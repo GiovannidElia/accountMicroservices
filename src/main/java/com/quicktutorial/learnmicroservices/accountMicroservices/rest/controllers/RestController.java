@@ -1,6 +1,6 @@
-package com.quicktutorial.learnmicroservices.accountMicroservices.controllers;
+package com.quicktutorial.learnmicroservices.accountMicroservices.rest.controllers;
 
-import com.quicktutorial.learnmicroservices.accountMicroservices.entities.User;
+import com.quicktutorial.learnmicroservices.accountMicroservices.repository.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

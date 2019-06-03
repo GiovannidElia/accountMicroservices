@@ -1,4 +1,4 @@
-package com.quicktutorial.learnmicroservices.accountMicroservices.entities;
+package com.quicktutorial.learnmicroservices.accountMicroservices.repository.entities;
 
 import lombok.*;
 

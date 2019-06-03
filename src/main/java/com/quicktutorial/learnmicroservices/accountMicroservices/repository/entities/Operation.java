@@ -1,4 +1,4 @@
-package com.quicktutorial.learnmicroservices.accountMicroservices.entities;
+package com.quicktutorial.learnmicroservices.accountMicroservices.repository.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,14 +26,14 @@ public class Operation {
     @Getter @Setter
     private Date date;
 
+    @Column(name="DESCRIPTION")
+    @Getter @Setter
+    private String description;
+
     @Column(name="VALUE")
     @Getter @Setter
     @NotNull
     private Double value;
-
-    @Column(name="DESCRIPTION")
-    @Getter @Setter
-    private String description;
 
     @Column(name="FK_ACCOUNT1")
     @NotNull @NotEmpty @NotBlank

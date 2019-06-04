@@ -1,13 +1,15 @@
-package com.quicktutorial.learnmicroservices.accountMicroservices.rest.controllers.account.model.response.dto;
+package com.quicktutorial.learnmicroservices.accountMicroservices.rest.controllers.account.model.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @AllArgsConstructor
 @NoArgsConstructor
-public class AccountDetailDTO {
+public class AccountDetailResponse {
 
     @Getter
     @Setter
@@ -17,5 +19,5 @@ public class AccountDetailDTO {
     private String fkUser;
 
     @Getter @Setter
-    private Double total;
+    private BigDecimal total;
 }

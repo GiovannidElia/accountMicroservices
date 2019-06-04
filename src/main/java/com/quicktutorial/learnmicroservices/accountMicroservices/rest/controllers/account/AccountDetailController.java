@@ -1,29 +1,34 @@
 package com.quicktutorial.learnmicroservices.accountMicroservices.rest.controllers.account;
 
 import com.quicktutorial.learnmicroservices.accountMicroservices.common.exceptions.NoDataFoundException;
-import com.quicktutorial.learnmicroservices.accountMicroservices.common.utility.Constant;
+import com.quicktutorial.learnmicroservices.accountMicroservices.common.model.BasicResponse;
+import com.quicktutorial.learnmicroservices.accountMicroservices.common.model.ClientErrorInformation;
+import com.quicktutorial.learnmicroservices.accountMicroservices.common.utility.DatePatternType;
 import com.quicktutorial.learnmicroservices.accountMicroservices.repository.entities.User;
 import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controllers.account.delegate.AccountDetailDelegate;
 import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controllers.account.exceptions.AccountDetailException;
-import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controllers.account.model.response.body.AccountDetailResponseBody;
-import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controllers.account.model.response.header.AccountDetailResponseObject;
+import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controllers.account.model.response.AccountDetailResponse;
 import com.quicktutorial.learnmicroservices.accountMicroservices.utils.UserValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.InvalidParameterException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 @Controller
 @Slf4j
 public class AccountDetailController {
+
+    SimpleDateFormat fmt = new SimpleDateFormat(DatePatternType.TIMESTAMP_YYYY_MM_DD_T_HH_MM_SS.pattern);
 
     @Autowired
     AccountDetailDelegate delegate;
@@ -74,26 +79,37 @@ public class AccountDetailController {
         return "User added correctly:" + user.getId() + ", "+ user.getUsername();
     }
 
-    @RequestMapping(value = "/accountDetail/{account}",
+    @RequestMapping(value = "/accountDetail/{userCode}",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public AccountDetailResponseObject accountDetail(@PathVariable(name = "account") String account) throws InvalidParameterException, NoDataFoundException, AccountDetailException {
+    public @ResponseBody BasicResponse<List<AccountDetailResponse>> accountDetail(@PathVariable(name = "userCode") String userCode) throws InvalidParameterException, NoDataFoundException, AccountDetailException {
 
-        log.debug("Entering in accountDetail service - PathVariable: [{}]", account);
+        log.info("Entering in accountDetail service - PathVariable: [{}]", userCode);
 
-        AccountDetailResponseObject objResponse = new AccountDetailResponseObject();
-        objResponse.setTypeOp(new Object(){}.getClass().getEnclosingMethod().getName());
-        objResponse.setStatusOp(Constant.RESPONSE_STATUS.STATUS_OP_OK);
-        objResponse.setMsgOp("MSG OP");
-
-        AccountDetailResponseBody body= delegate.getAccountDetail(account);
-
-        log.debug("result delegate.getAccountDetail(account) [{}]", body);
-
-        objResponse.setValue(body);
+        BasicResponse objResponse = new BasicResponse();
+        try {
+            List<AccountDetailResponse> delegateResult= delegate.getAccountDetail(userCode);
+            if (delegateResult.size()!=0){
+                objResponse.setData(delegateResult);
+                objResponse.setTimestamp(fmt.format(new Date()));
+            } else {
+                throw new NoDataFoundException("No data found for request param: "+userCode);
+            }
+            log.debug("result delegate.getAccountDetail(account) [{}]", objResponse);
+        } catch (InvalidParameterException | NoDataFoundException e){
+            log.error("ERROR {} ", e.getMessage(), e);
+            throw e;
+        } catch (Exception e) {
+            log.error("ERROR {} ", e.getMessage(), e);
+            throw new AccountDetailException("Error processing request", e);
+        }
 
         return objResponse;
     }
 
-
+    @ExceptionHandler({AccountDetailException.class})
+    public ResponseEntity<ClientErrorInformation> handleServiceException(Exception e) {
+        ClientErrorInformation error = new ClientErrorInformation(HttpStatus.EXPECTATION_FAILED.value(), e.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.EXPECTATION_FAILED);
+    }
 }

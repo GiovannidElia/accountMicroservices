@@ -3,12 +3,12 @@ package com.quicktutorial.learnmicroservices.accountMicroservices.rest.controlle
 import com.quicktutorial.learnmicroservices.accountMicroservices.repository.AccountRepository;
 import com.quicktutorial.learnmicroservices.accountMicroservices.repository.entities.Account;
 import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controllers.account.delegate.AccountDetailDelegate;
-import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controllers.account.model.response.body.AccountDetailResponseBody;
-import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controllers.account.model.response.dto.AccountDetailDTO;
+import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controllers.account.model.response.AccountDetailResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,27 +20,22 @@ public class AccountDetailDelegateImpl implements AccountDetailDelegate {
     AccountRepository repository;
 
     @Override
-    public AccountDetailResponseBody getAccountDetail(String account) {
-        log.debug("Into getAccountDetail delegate with PathParameter [{}]", account);
+    public List<AccountDetailResponse> getAccountDetail(String userCode) {
+        log.debug("Into getAccountDetail delegate with PathParameter [{}]", userCode);
 
-        List<Account> dbResult;
-
-        dbResult = repository.getAllAccountPerUser(account);
-        AccountDetailResponseBody response = new AccountDetailResponseBody();
-        response.setFilter(account);
-        response.setTotal(0);
-        response.setData(dbResultToDto(dbResult));
+        List<Account> dbResult = repository.getAllAccountPerUser(userCode);
+        List<AccountDetailResponse> response = dbResultToDto(dbResult);
 
         return response;
     }
 
-    private List<AccountDetailDTO> dbResultToDto(List<Account> dtos) {
-        List<AccountDetailDTO> formattedDTOs = new ArrayList<>();
+    private List<AccountDetailResponse> dbResultToDto(List<Account> dtos) {
+        List<AccountDetailResponse> formattedDTOs = new ArrayList<>();
         for (Account dto : dtos) {
-            AccountDetailDTO fileDto = new AccountDetailDTO();
+            AccountDetailResponse fileDto = new AccountDetailResponse();
             fileDto.setId(dto.getId());
             fileDto.setFkUser(dto.getFkUser());
-            fileDto.setTotal(Double.valueOf(dto.getTotal()));
+            fileDto.setTotal(BigDecimal.valueOf(dto.getTotal()).setScale(2,BigDecimal.ROUND_HALF_DOWN));
             formattedDTOs.add(fileDto);
         }
         return formattedDTOs;

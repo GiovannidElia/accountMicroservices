@@ -1,5 +1,8 @@
 package com.quicktutorial.learnmicroservices.accountMicroservices.rest.controller;
 
+import com.quicktutorial.learnmicroservices.accountMicroservices.TestDescription;
+import com.quicktutorial.learnmicroservices.accountMicroservices.common.exceptions.NoDataFoundException;
+import com.quicktutorial.learnmicroservices.accountMicroservices.common.model.BasicResponse;
 import com.quicktutorial.learnmicroservices.accountMicroservices.repository.AccountRepository;
 import com.quicktutorial.learnmicroservices.accountMicroservices.repository.OperationRepository;
 import com.quicktutorial.learnmicroservices.accountMicroservices.repository.UserRepository;
@@ -7,6 +10,7 @@ import com.quicktutorial.learnmicroservices.accountMicroservices.repository.enti
 import com.quicktutorial.learnmicroservices.accountMicroservices.repository.entities.Operation;
 import com.quicktutorial.learnmicroservices.accountMicroservices.repository.entities.User;
 import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controllers.account.AccountDetailController;
+import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controllers.account.model.response.AccountDetailResponse;
 import com.quicktutorial.learnmicroservices.accountMicroservices.utils.EncryptionUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
@@ -16,8 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.security.InvalidParameterException;
 import java.util.Date;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -46,7 +52,6 @@ public class AccountDetailControllerTest {
 
     @Before
     public void init() throws Exception {
-
         String encryptedPwd = encryptionUtils.encrypt("Abba");
         System.out.println("Ecripted pwd into DB: " + encryptedPwd);
         log.info("Ecripted pwd into DB: " + encryptedPwd);
@@ -80,14 +85,27 @@ public class AccountDetailControllerTest {
         operationRepository.save(new Operation("3465",new Date(),"Acquisto azioni", -3400.00, "cn7256su9",""));
     }
 
+    @TestDescription(subject = "accountDetailController",
+            description = "Effettua l'invocazione del controller del servizio /accountDetailController/{user}",
+            expectation = "Verifica che il repository trasformi i dati correttamente dal dto verso la response")
     @Test
-    public void validateRequestTypeAndDate() throws Exception {
+    public void validateRequestWithValidResult() throws Exception {
+
+        BasicResponse<List<AccountDetailResponse>> response = controller.accountDetail("RGNLSN87H13D761R");
+        assertEquals("cn4563df3", response.getData().get(0).getId());
+    }
+
+    @TestDescription(subject = "accountDetailController",
+            description = "Effettua l'invocazione del controller del servizio /accountDetailController/{user}",
+            expectation = "Verifica che il repository trasformi i dati correttamente dal dto verso la response")
+    @Test(expected = NoDataFoundException.class)
+    public void validateRequestWithNoDataResult() throws Exception {
 
         try {
-            controller.accountDetail("RGNLSN87H13D761R");
-        } catch (InvalidParameterException e) {
+            controller.accountDetail("RGNLSN87H13D761RW");
+        } catch (NoDataFoundException e) {
             log.debug("ERROR thrown {} ", e.getMessage(), e);
-            if (e.getMessage().toUpperCase().contains("DATE")) {
+            if (e.getMessage().toUpperCase().contains("NO DATA FOUND")) {
                 throw e;
             }
         }

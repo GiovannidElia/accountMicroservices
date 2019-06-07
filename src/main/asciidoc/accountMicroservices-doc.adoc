@@ -1,0 +1,119 @@
+= AccountMicroservice Service document
+Integration Manual
+
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+[[introduzione]]
+== Introduzione
+
+Introduzione
+
+[NOTE]
+====
+Questa guida fa riferimento alla versione: {project-version}
+====
+
+[[overview-http-verbs]]
+== HTTP verbs
+
+Per l'implementazione di AccountMicroservice Service si è cercato di aderire ove possibile alle convenzioni per gli standard HTTP and REST.
+
+|===
+| Verb | Usage
+
+| `GET`
+| Utilizzato per il recupero di informazioni
+
+| `POST`
+| Utilizzato per il recupero di informazioni con parametrizzazione complessa o per creare nuove risorse
+
+| `PATCH`
+| Utilizzato per aggiornare risorse esistenti, insclusi aggiornamenti parziali
+
+
+| `PUT`
+| Utilizzato per aggiornare risorse esistenti, solo aggiornamenti full
+
+| `DELETE`
+| Utilizzato per eliminare risorse esistenti
+|===
+
+[[overview-http-status-codes]]
+== HTTP status codes
+
+Per l'implementazione di AccountMicroservice Service si è cercato di aderire ove possibile alle convenzioni per gli standard HTTP and REST per l'utilizzo degli status code.
+
+|===
+| Status code | Usage
+
+| `200 OK`
+| Risposta standard per richieste HTTP con successo.
+La risposta effettiva dipenderà dal metodo di richiesta utilizzato.
+In una richiesta GET, la risposta conterrà un'entità corrispondente alla risorsa richiesta.
+In una richiesta POST, la risposta conterrà un'entità che descrive o contiene il risultato dell'azione.
+
+| `201 Created`
+| La richiesta è stata soddisfatta e ha portato alla creazione di una nuova risorsa.
+
+| `204 No Content`
+| Il server ha elaborato correttamente la richiesta, ma non restituisce alcun dato.
+
+| `400 Bad Request`
+| Il server non può o non vuole elaborare la richiesta a causa di qualcosa che è percepito come un errore del client (ad esempio, sintassi di richiesta non valida, frammento di messaggio di richiesta non valido o instradamento di richieste ingannevoli).
+
+| `404 Not Found`
+| La risorsa richiesta non è stata trovata ma potrebbe essere nuovamente disponibile in futuro. Sono consentite richieste successive da parte del cliente.
+
+| `405 Method not allowed`
+| La risorsa richiesta non è stata trovata ma potrebbe essere nuovamente disponibile in futuro. Sono consentite richieste successive da parte del cliente.
+
+| `415 Unsupported MediaType`
+| Si è verificato un errore durante l'esecuzione della richiesta inviata in un formato errato.
+
+| `417 Expectation Failed`
+| Si è verificato un errore durante l'esecuzione della richiesta, verificare la descrizione dell'errore.
+|===
+
+[[services]]
+== Servizi
+
+Di seguito l'elenco dei servizi REST disponibili:
+
+== /accountDetailBasicResponse
+Descrizione
+
+ - Elenco puntato
+
+[[service-account-detail-controller-test-account-detail-basic-response-doc]]
+=== Esempio di HTTP Request
+include::..\..\..\target\generated-snippets\account-detail-controller-test-account-detail-basic-response-doc\http-request.adoc[]
+
+=== Esempio di HTTP Response
+include::..\..\..\target\generated-snippets\account-detail-controller-test-account-detail-basic-response-doc\http-response.adoc[]
+
+== /accountDetailExtendedResponse
+Descrizione
+
+ - Elenco puntato
+
+
+[[service-account-detail-controller-test-account-detail-extended-response-doc]]
+=== Esempio di HTTP Request
+include::..\..\..\target\generated-snippets\account-detail-controller-test-account-detail-extended-response-doc\http-request.adoc[]
+
+=== Esempio di HTTP Response
+include::..\..\..\target\generated-snippets\account-detail-controller-test-account-detail-extended-response-doc\http-response.adoc[]
+
+
+=== Esempi di Response KO
+
+include::..\..\..\target\generated-snippets\account-detail-controller-test-doc-no-data-found\response-body.adoc[]
+
+=== Esempio di HTTP Response KO
+
+include::..\..\..\target\generated-snippets\account-detail-controller-test-doc-no-data-found\http-response.adoc[]

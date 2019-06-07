@@ -1,13 +1,15 @@
-package com.quicktutorial.learnmicroservices.accountMicroservices.rest.controllers.account;
+package com.quicktutorial.learnmicroservices.accountMicroservices.rest.controller.account;
 
 import com.quicktutorial.learnmicroservices.accountMicroservices.common.exceptions.NoDataFoundException;
 import com.quicktutorial.learnmicroservices.accountMicroservices.common.model.BasicResponse;
 import com.quicktutorial.learnmicroservices.accountMicroservices.common.model.ClientErrorInformation;
+import com.quicktutorial.learnmicroservices.accountMicroservices.common.model.ExtendedResponse;
+import com.quicktutorial.learnmicroservices.accountMicroservices.common.model.SourceUpdate;
 import com.quicktutorial.learnmicroservices.accountMicroservices.common.utility.DatePatternType;
 import com.quicktutorial.learnmicroservices.accountMicroservices.repository.entities.User;
-import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controllers.account.delegate.AccountDetailDelegate;
-import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controllers.account.exceptions.AccountDetailException;
-import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controllers.account.model.response.AccountDetailResponse;
+import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controller.account.delegate.AccountDetailDelegate;
+import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controller.account.exceptions.AccountDetailException;
+import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controller.account.model.response.AccountDetailResponse;
 import com.quicktutorial.learnmicroservices.accountMicroservices.utils.UserValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,23 +81,26 @@ public class AccountDetailController {
         return "User added correctly:" + user.getId() + ", "+ user.getUsername();
     }
 
-    @RequestMapping(value = "/accountDetail/{userCode}",
+    @RequestMapping(value = "/accountDetailExtendedResponse/{userCode}",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody BasicResponse<List<AccountDetailResponse>> accountDetail(@PathVariable(name = "userCode") String userCode) throws InvalidParameterException, NoDataFoundException, AccountDetailException {
+    public @ResponseBody ResponseEntity<ExtendedResponse<List<AccountDetailResponse>>> accountDetailExtendedResponse(@PathVariable(name = "userCode") String userCode) throws InvalidParameterException, NoDataFoundException, AccountDetailException {
 
         log.info("Entering in accountDetail service - PathVariable: [{}]", userCode);
 
-        BasicResponse objResponse = new BasicResponse();
+        List<AccountDetailResponse> delegateResult =  null;
+        ExtendedResponse<List<AccountDetailResponse>> response = new ExtendedResponse<>();
         try {
-            List<AccountDetailResponse> delegateResult= delegate.getAccountDetail(userCode);
-            if (delegateResult.size()!=0){
-                objResponse.setData(delegateResult);
-                objResponse.setTimestamp(fmt.format(new Date()));
+            delegateResult= delegate.getAccountDetail(userCode);
+            if (!delegateResult.isEmpty() && delegateResult!=null){
+                response.setData(delegateResult);
+                response.setTimestamp(fmt.format(new Date()));
+                response.setLastUpdates(new SourceUpdate("CUSTOMER", "07/06/2019 15:13"));
+
             } else {
                 throw new NoDataFoundException("No data found for request param: "+userCode);
             }
-            log.debug("result delegate.getAccountDetail(account) [{}]", objResponse);
+            log.debug("result delegate.getAccountDetail(account) [{}]", response);
         } catch (InvalidParameterException | NoDataFoundException e){
             log.error("ERROR {} ", e.getMessage(), e);
             throw e;
@@ -104,8 +109,44 @@ public class AccountDetailController {
             throw new AccountDetailException("Error processing request", e);
         }
 
-        return objResponse;
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(response);
     }
+
+    @RequestMapping(value = "/accountDetailBasicResponse/{userCode}",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ResponseEntity<BasicResponse<List<AccountDetailResponse>>> accountDetailBasicResponse(@PathVariable(name = "userCode") String userCode) throws InvalidParameterException, NoDataFoundException, AccountDetailException {
+
+        log.info("Entering in accountDetail service - PathVariable: [{}]", userCode);
+
+        List<AccountDetailResponse> delegateResult =  null;
+        BasicResponse<List<AccountDetailResponse>> response = new BasicResponse<>();
+        try {
+            delegateResult= delegate.getAccountDetail(userCode);
+            if (!delegateResult.isEmpty() && delegateResult!=null){
+                response.setData(delegateResult);
+                response.setTimestamp(fmt.format(new Date()));
+            } else {
+                throw new NoDataFoundException("No data found for request param: "+userCode);
+            }
+            log.debug("result delegate.getAccountDetail(account) [{}]", response);
+        } catch (InvalidParameterException | NoDataFoundException e){
+            log.error("ERROR {} ", e.getMessage(), e);
+            throw e;
+        } catch (Exception e) {
+            log.error("ERROR {} ", e.getMessage(), e);
+            throw new AccountDetailException("Error processing request", e);
+        }
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(response);
+    }
+
 
     @ExceptionHandler({AccountDetailException.class})
     public ResponseEntity<ClientErrorInformation> handleServiceException(Exception e) {

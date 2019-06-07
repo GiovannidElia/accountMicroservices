@@ -1,9 +1,9 @@
-package com.quicktutorial.learnmicroservices.accountMicroservices.rest.controllers.account.delegate.impl;
+package com.quicktutorial.learnmicroservices.accountMicroservices.rest.controller.account.delegate.impl;
 
 import com.quicktutorial.learnmicroservices.accountMicroservices.repository.AccountRepository;
 import com.quicktutorial.learnmicroservices.accountMicroservices.repository.entities.Account;
-import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controllers.account.delegate.AccountDetailDelegate;
-import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controllers.account.model.response.AccountDetailResponse;
+import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controller.account.delegate.AccountDetailDelegate;
+import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controller.account.model.response.AccountDetailResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

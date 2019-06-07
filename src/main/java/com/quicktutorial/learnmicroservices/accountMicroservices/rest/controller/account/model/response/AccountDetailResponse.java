@@ -1,4 +1,4 @@
-package com.quicktutorial.learnmicroservices.accountMicroservices.rest.controllers.account.model.response;
+package com.quicktutorial.learnmicroservices.accountMicroservices.rest.controller.account.model.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.security.InvalidParameterException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -94,7 +93,7 @@ public class AccountDetailController {
             delegateResult= delegate.getAccountDetail(userCode);
             if (!delegateResult.isEmpty() && delegateResult!=null){
                 response.setData(delegateResult);
-                response.setTimestamp(fmt.format(new Date()));
+                //response.setTimestamp(fmt.format(new Date()));
                 response.setLastUpdates(new SourceUpdate("CUSTOMER", "07/06/2019 15:13"));
 
             } else {
@@ -128,7 +127,7 @@ public class AccountDetailController {
             delegateResult= delegate.getAccountDetail(userCode);
             if (!delegateResult.isEmpty() && delegateResult!=null){
                 response.setData(delegateResult);
-                response.setTimestamp(fmt.format(new Date()));
+                //response.setTimestamp(fmt.format(new Date()));
             } else {
                 throw new NoDataFoundException("No data found for request param: "+userCode);
             }

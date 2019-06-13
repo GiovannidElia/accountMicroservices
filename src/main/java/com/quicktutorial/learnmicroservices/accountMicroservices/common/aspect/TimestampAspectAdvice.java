@@ -19,7 +19,7 @@ import java.util.Date;
 @Slf4j
 public class TimestampAspectAdvice {
 
-    @AfterReturning(pointcut = "execution(public * com.quicktutorial.learnmicroservices.accountMicroservices.rest.controller.account.*.*(..))", returning = "returnValue")
+    @AfterReturning(pointcut = "execution(public * com.quicktutorial.learnmicroservices.accountMicroservices.rest.controller.account.AccountDetailController.*(..))", returning = "returnValue")
     public void setTimestamp(JoinPoint joinPoint, Object returnValue) throws IllegalAccessException, SecurityException, IllegalArgumentException, InvocationTargetException {
         log.debug("Entering setTimestamp aspect for method [{}]", joinPoint.getSignature());
 

@@ -39,7 +39,11 @@ public class AccountMicroservicesApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		log.info("Hello 1");
 		String encryptedPwd = encryptionUtils.encrypt("Abba");
-		System.out.println("Ecripted pwd into DB: " + encryptedPwd);
+		String decryptedPwd = encryptionUtils.decrypt("JvpRFiKQ7c4I/HmCsmvdWA==");
+
+		System.out.println("Ecrypted pwd into DB: " + encryptedPwd);
+		System.out.println("Decrypted pwd into DB: " + decryptedPwd);
+
 		log.info("Ecripted pwd into DB: " + encryptedPwd);
 		userRepository.save(new User("RGNLSN87H13D761R", "Alessandro Argentieri", encryptedPwd, "user"));
 

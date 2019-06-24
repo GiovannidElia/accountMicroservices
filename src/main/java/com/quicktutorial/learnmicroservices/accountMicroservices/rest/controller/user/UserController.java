@@ -1,7 +1,10 @@
-package com.quicktutorial.learnmicroservices.accountMicroservices.rest.controller.account;
+package com.quicktutorial.learnmicroservices.accountMicroservices.rest.controller.user;
 
 import com.quicktutorial.learnmicroservices.accountMicroservices.repository.entities.User;
 import com.quicktutorial.learnmicroservices.accountMicroservices.utils.UserValidator;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -60,4 +63,21 @@ public class UserController {
         return "User added correctly:" + user.getId() + ", "+ user.getUsername();
     }
 
+    /**
+     * inner class used as the Object tied into the Body of the ResponseEntity.
+     * It's important to have this Object because it is composed of server response code and response object.
+     * Then, JACKSON LIBRARY automatically convert this JsonResponseBody Object into a JSON response.
+     */
+    @AllArgsConstructor
+    public class JsonResponseBody{
+        @Getter
+        @Setter
+        private int server;
+        @Getter @Setter
+        private Object response;
+    }
+
+    /*---------------------------------------------------------*/
+
 }
+

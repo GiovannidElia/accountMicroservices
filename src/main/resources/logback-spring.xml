@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="30 seconds">
+<!-- 
+	OFF (output no logs)
+	ERROR
+	WARN
+	INFO
+	DEBUG
+	TRACE
+	
+	LOGGER.error("doStuff encountered an error with value - {}", objRequest);
+	LOGGER.warn("doStuff needed to warn - {}", objRequest);
+	LOGGER.info("doStuff took input - {}", objRequest);
+	LOGGER.debug("OPERATION - SearchPacketRequestBody.searchPacket");
+	LOGGER.trace("doStuff needed more information - {}", objRequest);
+ -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{HH:mm:ss.SSS} [%thread] [%p] %logger{5} - %M - %msg%n</Pattern>
+		</layout>
+    </appender>
+    <!-- LEVEL INFO THEN DEGUB AND TRACE HAVE NOT BEEN DISPLAYED -->
+    <root level="info">
+    	<appender-ref ref="STDOUT" />
+    </root>
+    
+    <!-- LEVEL DEBUG THEN PRINT ALL, BUT NOT TRACE -->
+	<appender name="SAVE-TO-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	    <file>C:\udemy-project\accountMicroservices-log\service\AccountDetailController.log</file>
+	    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} | [%thread] | %X{trId} | [%p] | %logger  |  %M  | %msg%n</pattern>
+	    </encoder>
+	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        	<fileNamePattern>C:\udemy-project\accountMicroservices-log\service\archived\AccountDetailController\log_%d{dd-MM-yyyy}.log</fileNamePattern>
+       	 	<maxHistory>10</maxHistory>
+        	<totalSizeCap>100MB</totalSizeCap>
+    	</rollingPolicy>
+	</appender>
+	<logger name="com.quicktutorial.learnmicroservices.accountMicroservices.rest.controller.account.AccountDetailController" additivity="false" level="debug">
+    	<appender-ref ref="SAVE-TO-FILE" />
+	</logger>
+	
+	<!-- LEVEL DEBUG THEN PRINT ALL, BUT NOT TRACE -->
+	<appender name="SAVE-TO-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	    <file>C:\udemy-project\accountMicroservices-log\service\UserController.log</file>
+	    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+	        <Pattern>
+	            %d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M - %msg%n
+	        </Pattern>
+	    </encoder>
+	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        	<fileNamePattern>C:\udemy-project\accountMicroservices-log\service\archived\UserController\log_%d{dd-MM-yyyy}.log</fileNamePattern>
+       	 	<maxHistory>10</maxHistory>
+        	<totalSizeCap>100MB</totalSizeCap>
+    	</rollingPolicy>
+	</appender>
+	<logger name="com.quicktutorial.learnmicroservices.accountMicroservices.rest.controller.user.UserController" additivity="false" level="debug">
+    	<appender-ref ref="SAVE-TO-FILE" />
+	</logger>
+
+</configuration>

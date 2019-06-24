@@ -1,5 +1,6 @@
 package com.quicktutorial.learnmicroservices.accountMicroservices.utils;
 
+
 import org.jasypt.util.text.BasicTextEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component                              //Spring will automatically instatiate and inject this component as a normal @Bean defined into a @Configuration file
 public class EncryptionUtils {
 
-    @Autowired                          //@Bean declared in @SpringBootApplication file and injected here by Spring
+    @Autowired                          //@Bean declared in @SpringBootApplication file and injected here by Sprin
     BasicTextEncryptor textEncryptor;
 
     /*

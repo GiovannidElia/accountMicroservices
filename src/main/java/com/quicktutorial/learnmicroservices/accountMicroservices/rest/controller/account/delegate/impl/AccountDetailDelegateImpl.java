@@ -6,13 +6,13 @@ import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controller
 import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controller.account.model.response.AccountDetailResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@Service
 @Slf4j
 public class AccountDetailDelegateImpl implements AccountDetailDelegate {
 

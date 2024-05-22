@@ -12,6 +12,7 @@ import com.quicktutorial.learnmicroservices.accountMicroservices.repository.enti
 import com.quicktutorial.learnmicroservices.accountMicroservices.repository.entities.User;
 import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controller.account.AccountDetailController;
 import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controller.account.delegate.AccountDetailDelegate;
+import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controller.account.model.request.AccountDetailRequest;
 import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controller.account.model.response.AccountDetailResponse;
 import com.quicktutorial.learnmicroservices.accountMicroservices.rest.document.CommonDocumentRestTest;
 import com.quicktutorial.learnmicroservices.accountMicroservices.utils.EncryptionUtils;
@@ -183,7 +184,7 @@ public class AccountDetailControllerTest extends CommonDocumentRestTest {
     }
 
     @TestDescription(subject = "AccountDetailController",
-            description = "Effettua l'invocazione del servizio /accountDetailBasicResponse/{userCode}",
+            description = "Effettua l'invocazione del servizio /accountDetailBasicResponse",
             expectation = "verifica che request e response siano conformi alla definizione di interfaccia dichiarata per produrre la documentazione")
     @Test
     public void accountDetailBasicResponseDoc() throws Exception {
@@ -199,18 +200,12 @@ public class AccountDetailControllerTest extends CommonDocumentRestTest {
         when(delegateMock.getAccountDetail(anyString())).thenReturn(list);
 
         MvcResult result =  mockMvc.perform(
-                post(CONTEXT_PATH+"/accountDetailBasicResponse/{userCode}", "RGNLSN87H13D761R")
+                post(CONTEXT_PATH+"/accountDetailBasicResponse")
+                        .content("{\"cf\":\"RGNLSN87H13D761R\"}")
                         .contextPath(CONTEXT_PATH)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
         )
                 .andDo(document("{class-name}-{method-name}",
-                        pathParameters(
-                                parameterWithName("userCode").description(env.getProperty("rest.learnmicroservice.request_type.field.description"))
-                                        .attributes(
-                                                key("mandatory").value(env.getProperty("rest.mandatory.yes")),
-                                                key("pattern_domain").value(env.getProperty("rest.learnmicroservice.request_type.field.domain"))
-                                        )
-                        ),
                         getBasicResponseFieldsSnippet()
                 ))
                 .andExpect(status().isOk()).andReturn();
@@ -228,7 +223,8 @@ public class AccountDetailControllerTest extends CommonDocumentRestTest {
                 .thenThrow(new NoDataFoundException("No data found"));
 
         MvcResult result =  mockMvc.perform(
-                post(CONTEXT_PATH+"/accountDetailBasicResponse/{userCode}", "RGNLSN87H13D761R")
+                post(CONTEXT_PATH+"/accountDetailBasicResponse")
+                        .content("{\"cf\":\"RGNLSN87H13D761R\"}")
                         .contextPath(CONTEXT_PATH)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
         )

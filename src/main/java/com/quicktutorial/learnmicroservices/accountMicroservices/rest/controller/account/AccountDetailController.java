@@ -8,6 +8,7 @@ import com.quicktutorial.learnmicroservices.accountMicroservices.common.model.So
 import com.quicktutorial.learnmicroservices.accountMicroservices.common.utility.DatePatternType;
 import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controller.account.delegate.AccountDetailDelegate;
 import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controller.account.exceptions.AccountDetailException;
+import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controller.account.model.request.AccountDetailRequest;
 import com.quicktutorial.learnmicroservices.accountMicroservices.rest.controller.account.model.response.AccountDetailResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,17 +65,17 @@ public class AccountDetailController {
                 .body(response);
     }
 
-    @RequestMapping(value = "/accountDetailBasicResponse/{userCode}",
+    @RequestMapping(value = "/accountDetailBasicResponse",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<BasicResponse<List<AccountDetailResponse>>> accountDetailBasicResponse(@PathVariable(name = "userCode") String userCode) throws InvalidParameterException, NoDataFoundException, AccountDetailException {
+    public @ResponseBody ResponseEntity<BasicResponse<List<AccountDetailResponse>>> accountDetailBasicResponse(@RequestBody AccountDetailRequest userCode) throws InvalidParameterException, NoDataFoundException, AccountDetailException {
 
-        log.info("Entering in accountDetail service - PathVariable: [{}]", userCode);
+        log.info("Entering in accountDetail service - PathVariable: [{}]", userCode.getCf());
 
         List<AccountDetailResponse> delegateResult =  null;
         BasicResponse<List<AccountDetailResponse>> response = new BasicResponse<>();
         try {
-            delegateResult= delegate.getAccountDetail(userCode);
+            delegateResult= delegate.getAccountDetail(userCode.getCf());
             if (!delegateResult.isEmpty() && delegateResult!=null){
                 response.setData(delegateResult);
                 //response.setTimestamp(fmt.format(new Date()));

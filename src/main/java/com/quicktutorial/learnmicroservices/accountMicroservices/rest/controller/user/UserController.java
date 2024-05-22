@@ -17,8 +17,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 import java.security.InvalidParameterException;
 import java.util.Date;
+import java.util.NoSuchElementException;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -47,7 +49,13 @@ public class UserController {
     //if pwd is null it will return a JAVA JSR-303 error message thanks to @Valid
     @RequestMapping("/newuser2")
     @ResponseBody
-    public String addUserValid(@Valid User user){
+    public String addUserValid(@RequestParam(value ="id") String id, @RequestParam(value="password") @Nullable String pwd, @RequestParam(value="username") @Nullable String username, @RequestParam(value="permission") @Nullable String permission){
+        User user = new User();
+        user.setId(id);
+        user.setPassword(pwd);
+        user.setPermission(permission);
+        user.setUsername(username);
+
         return "User added correctly:" + user.getId() + ", "+ user.getUsername();
     }
 
@@ -64,7 +72,7 @@ public class UserController {
     //if pwd is null it will return a JAVA JSR-303 error message thanks to Spring object BindingResult
     @RequestMapping("/newuser4")
     @ResponseBody
-    public String addUserValidPlusBinding2(User user, BindingResult result){
+    public String addUserValidPlusBinding2(@Valid User user, BindingResult result){
         /* Spring validation */
         UserValidator userValidator = new UserValidator();
         userValidator.validate(user, result);
@@ -77,7 +85,7 @@ public class UserController {
 
     @CrossOrigin
     @RequestMapping(value = "/login", method = POST)
-    public ResponseEntity<UserResponse> loginUser(@RequestParam(value ="id") String id, @RequestParam(value="password") @Nullable String pwd) throws InvalidParameterException, UserNotLoggedException {
+    public ResponseEntity<UserResponse> loginUser(@RequestParam(value ="id") String id, @RequestParam(value="password") @Nullable String pwd) throws InvalidParameterException, UserNotLoggedException, NoSuchElementException, UnsupportedEncodingException {
         //check if user exists in DB -> if exists generate JWT and send back to client
         String jwt=null;
         User delegateResult =  null;
@@ -87,12 +95,12 @@ public class UserController {
             if(delegateResult.getId()!=null){
                 jwt = delegate.createJwt(delegateResult.getId(), delegateResult.getUsername(), delegateResult.getPermission(), new Date());
             }
-        } catch (InvalidParameterException | UserNotLoggedException e){
-            log.error("ERROR {} ", e.getMessage(), e);
+        } catch (InvalidParameterException | UserNotLoggedException e) {
+            log.debug("DEBUG {} ", e.getMessage());
             throw e;
-        } catch (Exception e) {
-            log.error("ERROR {} ", e.getMessage(), e);
-            throw new UserNotLoggedException("Error processing request", e);
+        } catch (NoSuchElementException e) {
+            log.debug("DEBUG {} ", e.getMessage(), e);
+            throw new UserNotLoggedException(e.getMessage(), e, false, true);
         }
 
         return ResponseEntity.status(HttpStatus.OK).header("jwt", jwt).body(new UserResponse(HttpStatus.OK.value(), "Success! User logged in!"));

@@ -19,11 +19,11 @@
 			<Pattern>%d{HH:mm:ss.SSS} [%thread] [%p] %logger{5} - %M - %msg%n</Pattern>
 		</layout>
     </appender>
-    <!-- LEVEL INFO THEN DEGUB AND TRACE HAVE NOT BEEN DISPLAYED -->
-    <root level="info">
+    <!-- LEVEL INFO THEN DEBUG AND TRACE HAVE NOT BEEN DISPLAYED -->
+    <root level="INFO">
     	<appender-ref ref="STDOUT" />
     </root>
-    
+
     <!-- LEVEL DEBUG THEN PRINT ALL, BUT NOT TRACE -->
 	<appender name="SAVE-TO-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
 	    <file>C:\udemy-project\accountMicroservices-log\service\AccountDetailController.log</file>
@@ -36,12 +36,12 @@
         	<totalSizeCap>100MB</totalSizeCap>
     	</rollingPolicy>
 	</appender>
-	<logger name="com.quicktutorial.learnmicroservices.accountMicroservices.rest.controller.account.AccountDetailController" additivity="false" level="debug">
+	<logger name="com.quicktutorial.learnmicroservices.accountMicroservices.rest.controller.account.AccountDetailController" additivity="false" level="INFO">
     	<appender-ref ref="SAVE-TO-FILE" />
 	</logger>
 	
 	<!-- LEVEL DEBUG THEN PRINT ALL, BUT NOT TRACE -->
-	<appender name="SAVE-TO-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	<appender name="SAVE-TO-FILE-USER" class="ch.qos.logback.core.rolling.RollingFileAppender">
 	    <file>C:\udemy-project\accountMicroservices-log\service\UserController.log</file>
 	    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 	        <Pattern>
@@ -54,8 +54,8 @@
         	<totalSizeCap>100MB</totalSizeCap>
     	</rollingPolicy>
 	</appender>
-	<logger name="com.quicktutorial.learnmicroservices.accountMicroservices.rest.controller.user.UserController" additivity="false" level="debug">
-    	<appender-ref ref="SAVE-TO-FILE" />
+	<logger name="com.quicktutorial.learnmicroservices.accountMicroservices.rest.controller.user.UserController" additivity="false" level="INFO">
+    	<appender-ref ref="SAVE-TO-FILE-USER" />
 	</logger>
 
 </configuration>
